@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Panel personal para seguir ingresos, conversiones y engagement de tus redes sociales.">
+    <title>Creator Desk | Resumen</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="min-h-screen bg-[#f4f5f1] font-sans text-[#20231f] antialiased">
+    <header class="border-b border-black/10 bg-white">
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-y-3 px-5 py-4 sm:px-8">
+            <a href="#resumen" class="flex items-center gap-3" aria-label="Creator Desk, inicio">
+                <span class="flex size-10 items-center justify-center rounded-md bg-[#c7f36e] text-sm font-black">CD</span>
+                <span class="leading-tight"><span class="block text-sm font-bold">creator desk</span><span class="block text-xs text-[#73776f]">tu negocio, en contexto</span></span>
+            </a>
+            <nav aria-label="Secciones del dashboard" class="order-3 flex basis-full items-center justify-center gap-2 border-t border-black/5 pt-2 sm:order-none sm:basis-auto sm:border-0 sm:pt-0 md:gap-4">
+                <a href="#resultsBlock" class="rounded-sm px-2 py-2 text-xs font-semibold text-[#62685e] hover:text-[#20231f] focus:outline-2 focus:outline-offset-2 focus:outline-[#829f55]">KPIs</a>
+                <a href="#driversBlock" class="rounded-sm px-2 py-2 text-xs font-semibold text-[#62685e] hover:text-[#20231f] focus:outline-2 focus:outline-offset-2 focus:outline-[#829f55]">Drivers</a>
+                <a href="#operationsBlock" class="rounded-sm px-2 py-2 text-xs font-semibold text-[#62685e] hover:text-[#20231f] focus:outline-2 focus:outline-offset-2 focus:outline-[#829f55]">Operación</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="hidden items-center gap-2 rounded-full border border-black/10 px-3 py-1.5 text-xs font-medium text-[#5f665c] sm:flex"><span class="size-2 rounded-full bg-[#8dc83f]"></span>Datos de muestra</span>
+                <button id="exportButton" type="button" class="inline-flex min-h-10 items-center gap-2 rounded-md bg-[#20231f] px-4 text-sm font-semibold text-white transition hover:bg-[#3c4239] focus:outline-2 focus:outline-offset-2 focus:outline-[#20231f]" aria-label="Exportar el reporte filtrado a CSV">
+                    <svg aria-hidden="true" viewBox="0 0 20 20" class="size-4" fill="none"><path d="M10 2.75v9m0 0 3.25-3.25M10 11.75 6.75 8.5M3.75 13.75v2.5h12.5v-2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Exportar CSV
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="resumen" class="mx-auto max-w-7xl px-5 pb-12 pt-8 sm:px-8 sm:pt-10">
+        <section class="mb-7 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+            <div>
+                <p class="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-[#73806a]">Vista general <span class="px-1 text-[#b4b8af]">/</span> Monetización</p>
+                <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Resumen de rendimiento</h1>
+                <p class="mt-2 max-w-xl text-sm leading-6 text-[#6c7168]">Comisiones, contenido y retorno de tus colaboraciones en un solo lugar.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                <label class="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[#73776f]">Periodo
+                    <select id="periodFilter" class="h-10 min-w-32 rounded-md border border-black/10 bg-white px-3 text-sm font-medium normal-case tracking-normal text-[#20231f] outline-none focus:border-[#829f55]"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select>
+                </label>
+                <label class="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[#73776f]">Plataforma
+                    <select id="platformFilter" class="h-10 min-w-32 rounded-md border border-black/10 bg-white px-3 text-sm font-medium normal-case tracking-normal text-[#20231f] outline-none focus:border-[#829f55]"><option value="all">Todas</option><option value="Instagram">Instagram</option><option value="TikTok">TikTok</option><option value="YouTube">YouTube</option></select>
+                </label>
+                <label class="col-span-2 flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-[#73776f] sm:col-span-1">Producto
+                    <select id="productFilter" class="h-10 rounded-md border border-black/10 bg-white px-3 text-sm font-medium normal-case tracking-normal text-[#20231f] outline-none focus:border-[#829f55]"><option value="all">Todos</option><option value="Producto A">Producto A</option><option value="Producto B">Producto B</option><option value="Producto C">Producto C</option></select>
+                </label>
+            </div>
+        </section>
+
+        <section id="resultsBlock" class="mb-9">
+            <div id="resultsHeading"></div>
+        <div id="primaryKpis" aria-label="Indicadores principales" class="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+        <div id="dimensionRows" class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+        </section>
+
+        <section id="driversBlock" class="mb-9">
+            <div id="driversHeading"></div>
+            <section aria-label="Conversión y calidad de audiencia" class="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:gap-6">
+                <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div><h2 class="text-base font-semibold">Funnel de conversión</h2><p class="mt-1 text-xs text-[#73776f]">Impresiones → clics → ventas atribuidas</p></div><div id="funnelRows" class="mt-5 space-y-4"></div></article>
+                <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div><h2 class="text-base font-semibold">Calidad y retención</h2><p class="mt-1 text-xs text-[#73776f]">Necesita una fuente de leads o suscripciones</p></div><div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-4" id="qualityRows"></div></article>
+            </section>
+
+        <section aria-label="Evolución y rendimiento por plataforma" class="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:gap-6">
+            <article class="min-w-0 rounded-md border border-black/10 bg-white p-5 sm:p-6">
+                <div class="flex flex-wrap items-start justify-between gap-3"><div><h2 class="text-base font-semibold">Comisiones a lo largo del tiempo</h2><p class="mt-1 text-xs text-[#73776f]">Tendencia diaria · datos de muestra</p></div><div class="flex items-center gap-4 text-xs font-medium text-[#686e64]"><span class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-[#9bd34e]"></span>Comisiones</span><span class="flex items-center gap-2"><span class="size-2.5 rounded-full bg-[#e7a27e]"></span>Costes</span></div></div>
+                <div class="mt-5 overflow-hidden"><svg id="trendChart" class="h-56 w-full" viewBox="0 0 720 240" role="img" aria-label="Gráfico de comisiones y costes diarios"></svg></div>
+                <div id="chartLabels" class="mt-1 flex justify-between text-xs text-[#8a8e86]"></div>
+            </article>
+            <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div class="flex items-start justify-between gap-3"><div><h2 class="text-base font-semibold">Rendimiento por plataforma</h2><p class="mt-1 text-xs text-[#73776f]">Retorno e ingresos atribuidos</p></div><span class="text-xs font-bold uppercase tracking-wide text-[#8a8e86]">ROAS</span></div><div id="platformRows" class="mt-4 divide-y divide-black/5"></div><p class="mt-4 border-t border-black/5 pt-3 text-xs leading-5 text-[#82877e]">ROAS = ingresos atribuidos ÷ inversión promocional.</p></article>
+        </section>
+
+        <section aria-label="Rendimiento por producto y engagement" class="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:gap-6">
+            <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div class="flex items-start justify-between gap-3"><div><h2 class="text-base font-semibold">Ingresos por producto</h2><p class="mt-1 text-xs text-[#73776f]">Ventas atribuidas y comisiones</p></div><span class="text-xs font-bold uppercase tracking-wide text-[#8a8e86]">EUR</span></div><div id="productRows" class="mt-6 space-y-5"></div></article>
+            <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div class="flex flex-wrap items-start justify-between gap-3"><div><h2 class="text-base font-semibold">Engagement rate</h2><p class="mt-1 text-xs text-[#73776f]">Interacciones ÷ alcance · mismo periodo y filtros</p></div><span class="rounded-sm bg-[#f1f2ee] px-2 py-1 text-xs font-bold uppercase tracking-wide text-[#656b61]">Por alcance</span></div><div class="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2"><div><h3 class="mb-3 text-xs font-bold uppercase tracking-wide text-[#7b8076]">Por plataforma</h3><div id="platformEngagement" class="space-y-3"></div></div><div><h3 class="mb-3 text-xs font-bold uppercase tracking-wide text-[#7b8076]">Por producto</h3><div id="productEngagement" class="space-y-3"></div></div></div></article>
+        </section>
+
+        <section aria-label="Actividad e interacciones" class="mb-5 grid grid-cols-1 gap-3 lg:grid-cols-2">
+            <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div><h2 class="text-base font-semibold">Actividad publicada</h2><p class="mt-1 text-xs text-[#73776f]">Piezas estimadas por plataforma · datos demo</p></div><div id="activityRows" class="mt-4"></div></article>
+            <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><div><h2 class="text-base font-semibold">Interacciones por plataforma</h2><p class="mt-1 text-xs text-[#73776f]">Me gusta, comentarios, compartidos y guardados</p></div><div id="interactionRows" class="mt-4"></div></article>
+        </section>
+        </section>
+
+        <section id="operationsBlock" class="mb-9">
+            <div id="operationsHeading"></div>
+            <section aria-label="Alertas y oportunidades" class="mb-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:gap-6">
+                <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><h2 class="text-base font-semibold">Alertas del periodo</h2><div id="alertsRows" class="mt-4 space-y-3"></div></article>
+                <article class="rounded-md border border-black/10 bg-white p-5 sm:p-6"><h2 class="text-base font-semibold">Top y oportunidades de mejora</h2><div id="opportunityRows" class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2"></div></article>
+            </section>
+
+            <section aria-label="Tablas de productos y plataformas" class="mb-5 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                <article class="overflow-hidden rounded-md border border-black/10 bg-white"><div class="border-b border-black/10 px-5 py-4"><h2 class="text-base font-semibold">Productos</h2><p class="mt-1 text-xs text-[#73776f]">Precio, comisiones, conversiones y retorno</p></div><div id="productTableRows"></div></article>
+                <article class="overflow-hidden rounded-md border border-black/10 bg-white"><div class="border-b border-black/10 px-5 py-4"><h2 class="text-base font-semibold">Plataformas</h2><p class="mt-1 text-xs text-[#73776f]">Alcance, engagement, conversiones, CTR y ROAS</p></div><div id="platformTableRows"></div></article>
+            </section>
+
+        <section aria-label="Detalle de campañas" class="overflow-hidden rounded-md border border-black/10 bg-white">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 px-5 py-4 sm:px-6"><div><h2 class="text-base font-semibold">Detalle de campañas</h2><p class="mt-1 text-xs text-[#73776f]">Comparación por plataforma y producto</p></div><span id="rowCount" class="rounded-sm bg-[#f1f2ee] px-2.5 py-1 text-xs font-semibold text-[#62685e]">—</span></div>
+            <div id="campaignRows"></div>
+            <p id="emptyState" class="hidden px-6 py-10 text-center text-sm text-[#73776f]">No hay datos para esta combinación de filtros.</p>
+        </section>
+        </section>
+        <footer class="mt-5 flex flex-col gap-1 text-xs leading-5 text-[#858a80] sm:flex-row sm:justify-between"><p>Datos ficticios para demostración; conecta tus fuentes antes de tomar decisiones.</p><p>Comisión por venta = precio del producto × 15 % · Moneda demo: EUR</p></footer>
+    </main>
+
+    <script>
+        const commissionRate = 0.15;
+        const platforms = [
+            { name: "Instagram", mark: "IG", reach: 18000, ctr: 0.012, purchaseRate: 0.061, engagementRate: 0.048, dailySpend: 58, activity: { posts: 3, stories: 1, reels: 2, videos: 0 } },
+            { name: "TikTok", mark: "TT", reach: 36000, ctr: 0.009, purchaseRate: 0.052, engagementRate: 0.067, dailySpend: 86, activity: { posts: 0, stories: 0, reels: 2, videos: 0 } },
+            { name: "YouTube", mark: "YT", reach: 12000, ctr: 0.018, purchaseRate: 0.074, engagementRate: 0.039, dailySpend: 47, activity: { posts: 5, stories: 0, reels: 4, videos: 3 } }
+        ];
+        const products = [
+            { name: "Producto A", price: 50, weight: [0.43, 0.25, 0.32] },
+            { name: "Producto B", price: 120, weight: [0.28, 0.44, 0.28] },
+            { name: "Producto C", price: 80, weight: [0.29, 0.31, 0.40] }
+        ];
+        const numberFormat = new Intl.NumberFormat("es-ES");
+        const moneyFormat = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+        const percentFormat = new Intl.NumberFormat("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        function dateKey(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        }
+
+        function makeSampleData() {
+            const rows = [];
+            const activityRows = [];
+            for (let dayOffset = 179; dayOffset >= 0; dayOffset -= 1) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - dayOffset);
+                platforms.forEach((platform, platformIndex) => {
+                    const activity = platform.activity;
+                    activityRows.push({
+                        date: dateKey(date), platform: platform.name,
+                        posts: activity.posts && (dayOffset + platformIndex) % activity.posts === 0 ? 1 : 0,
+                        stories: activity.stories && (dayOffset + platformIndex) % activity.stories === 0 ? 1 + (dayOffset % 3 === 0 ? 1 : 0) : 0,
+                        reels: activity.reels && (dayOffset + platformIndex) % activity.reels === 0 ? 1 : 0,
+                        videos: activity.videos && (dayOffset + platformIndex) % activity.videos === 0 ? 1 : 0
+                    });
+                    products.forEach((product, productIndex) => {
+                        const weight = product.weight[platformIndex];
+                        const variation = 0.78 + ((dayOffset * 7 + platformIndex * 13 + productIndex * 17) % 45) / 100;
+                        const reach = Math.round(platform.reach * weight * variation);
+                        const impressions = Math.round(reach * (1.25 + variation / 5));
+                        const clicks = Math.round(impressions * platform.ctr * (0.82 + variation / 4));
+                        const conversions = Math.round(clicks * platform.purchaseRate * (0.84 + variation / 3));
+                        const revenue = conversions * product.price;
+                        const engagements = Math.round(reach * platform.engagementRate * (0.88 + variation / 5));
+                        const likes = Math.round(engagements * 0.68);
+                        const comments = Math.round(engagements * 0.12);
+                        const shares = Math.round(engagements * 0.08);
+                        rows.push({
+                            date: dateKey(date), platform: platform.name, product: product.name,
+                            reach, impressions, clicks, conversions, revenue, commission: revenue * commissionRate,
+                            spend: platform.dailySpend * weight * (0.85 + variation / 5),
+                            engagements, likes, comments, shares, saves: engagements - likes - comments - shares
+                        });
+                    });
+                });
+            }
+            return { rows, activityRows };
+        }
+
+        const sample = makeSampleData();
+        const sampleData = sample.rows;
+        const activityData = sample.activityRows;
+        const sum = (rows, key) => rows.reduce((total, row) => total + row[key], 0);
+        const ratio = (numerator, denominator) => denominator ? numerator / denominator : 0;
+        const money = (value) => moneyFormat.format(value);
+        const percentage = (value) => `${percentFormat.format(value)}%`;
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+        }
+
+        function sectionHeading(number, label, title, description, accent) {
+            return `<div class="mb-4 border-l-4 ${accent} pl-4"><p class="text-xs font-bold uppercase tracking-[0.15em] text-[#73806a]">Bloque ${number} · ${escapeHTML(label)}</p><h2 class="mt-1 text-xl font-semibold">${escapeHTML(title)}</h2><p class="mt-1 text-sm text-[#73776f]">${escapeHTML(description)}</p></div>`;
+        }
+
+        function widgetCard(title, content, options = {}) {
+            const cardClass = options.cardClass || "rounded-md border border-black/10 bg-white p-5";
+            const headingClass = options.headingClass || "text-sm font-medium text-[#656b61]";
+            const badge = options.badgeLabel ? `<span class="${options.badgeClass || "rounded-sm bg-[#f1f2ee] px-2 py-1 text-xs font-bold uppercase tracking-wide text-[#656b61]"}">${escapeHTML(options.badgeLabel)}</span>` : "";
+            return `<article class="${cardClass}"><div class="flex items-center justify-between gap-2"><h3 class="${headingClass}">${escapeHTML(title)}</h3>${badge}</div><div class="${options.bodyClass || "mt-4"}">${content}</div></article>`;
+        }
+
+        function renderTable(headers, rows, options = {}) {
+            const headerCells = headers.map((header, index) => {
+                const item = typeof header === "string" ? { label: header } : header;
+                const padding = index === 0 ? "px-4" : "px-3";
+                const alignment = item.align === "right" ? "text-right" : "text-left";
+                return `<th scope="col" class="${padding} py-3 ${alignment}">${escapeHTML(item.label)}</th>`;
+            }).join("");
+            const bodyRows = rows.map((row) => `<tr class="hover:bg-[#fafbf8]">${row.map((cell, index) => {
+                const tag = index === 0 ? "th scope=\"row\"" : "td";
+                const padding = index === 0 ? "px-4" : "px-3";
+                const alignment = headers[index]?.align === "right" ? "text-right" : "text-left";
+                const emphasis = index === 0 ? "font-semibold" : "";
+                return `<${tag} class="${padding} py-3 ${alignment} ${emphasis}">${escapeHTML(cell)}</${index === 0 ? "th" : "td"}>`;
+            }).join("")}</tr>`).join("");
+            return `<div class="overflow-x-auto"><table class="w-full ${options.minWidth || "min-w-max"} ${options.textSize || "text-xs"} text-left"><thead class="bg-[#fafbf8] font-bold uppercase tracking-wide text-[#7d8279]"><tr>${headerCells}</tr></thead><tbody class="divide-y divide-black/5">${bodyRows}</tbody></table></div>`;
+        }
+
+        function renderSectionHeadings() {
+            const sections = [
+                ["resultsHeading", "01", "Resultado", "Indicadores principales", "Lectura ejecutiva del periodo seleccionado.", "border-[#9bd34e]"],
+                ["driversHeading", "02", "Drivers", "Factores que explican el resultado", "Del alcance a la venta: identifica qué canal, producto y actividad impulsa el rendimiento.", "border-[#6caeaa]"],
+                ["operationsHeading", "03", "Operación", "Detalles, alertas y oportunidades", "Revisa el rendimiento por producto, plataforma y campaña.", "border-[#f0a77e]"]
+            ];
+            sections.forEach(([id, number, label, title, description, accent]) => {
+                document.getElementById(id).innerHTML = sectionHeading(number, label, title, description, accent);
+            });
+        }
+
+        function kpiSparkline(rows, metric, title) {
+            const daily = groupBy(rows, "date").sort((a, b) => a.name.localeCompare(b.name)).slice(-12);
+            const values = daily.map(metric);
+            if (!values.length) return `<p class="mt-4 text-xs text-[#858a80]">Sin datos en el periodo.</p>`;
+            const minimum = Math.min(...values);
+            const range = Math.max(...values) - minimum;
+            const heights = ["h-1", "h-2", "h-3", "h-4", "h-5", "h-6", "h-7", "h-8"];
+            const barColor = "bg-[#83b83a]";
+            const bars = values.map((value) => {
+                const level = range === 0 ? 4 : Math.max(1, Math.round(((value - minimum) / range) * 7) + 1);
+                return `<span aria-hidden="true" class="${heights[level - 1]} w-1.5 rounded-t-sm ${barColor}"></span>`;
+            }).join("");
+            return `<div role="img" aria-label="Tendencia demo de ${escapeHTML(title)} en el periodo seleccionado" class="mt-4 flex h-8 items-end gap-1">${bars}</div>`;
+        }
+
+        function aggregate(rows) {
+            return { reach: sum(rows, "reach"), impressions: sum(rows, "impressions"), clicks: sum(rows, "clicks"), conversions: sum(rows, "conversions"), revenue: sum(rows, "revenue"), commission: sum(rows, "commission"), spend: sum(rows, "spend"), engagements: sum(rows, "engagements"), likes: sum(rows, "likes"), comments: sum(rows, "comments"), shares: sum(rows, "shares"), saves: sum(rows, "saves") };
+        }
+
+        function groupBy(rows, key) {
+            const groups = new Map();
+            rows.forEach((row) => {
+                if (!groups.has(row[key])) groups.set(row[key], []);
+                groups.get(row[key]).push(row);
+            });
+            return [...groups.entries()].map(([name, entries]) => ({ name, ...aggregate(entries) }));
+        }
+
+        function filteredRows(days, platformName, productName, startOffset = 0) {
+            const end = new Date(today);
+            end.setDate(today.getDate() - startOffset);
+            const start = new Date(end);
+            start.setDate(end.getDate() - days + 1);
+            return sampleData.filter((row) => row.date >= dateKey(start) && row.date <= dateKey(end) &&
+                (platformName === "all" || row.platform === platformName) &&
+                (productName === "all" || row.product === productName));
+        }
+
+        function renderKpis(rows, previousRows) {
+            const current = aggregate(rows);
+            const previous = aggregate(previousRows);
+            const change = previous.commission ? ((current.commission - previous.commission) / previous.commission) * 100 : 0;
+            const sign = change >= 0 ? "+" : "";
+            const tone = change >= 0 ? "text-[#527a28]" : "text-[#b5543b]";
+            const cards = [
+                { title: "Comisiones generadas", value: money(current.commission), badge: "EUR", note: `<span class="${tone}">${sign}${percentFormat.format(change)}%</span> vs. periodo anterior`, metric: (day) => day.commission },
+                { title: "Ventas atribuidas", value: numberFormat.format(current.conversions), badge: "VENTAS", note: "conversiones registradas", metric: (day) => day.conversions },
+                { title: "Conversión sobre alcance", value: percentage(ratio(current.conversions, current.reach) * 100), badge: "VENTAS / ALCANCE", note: "conversiones ÷ alcance total", metric: (day) => ratio(day.conversions, day.reach) },
+                { title: "Retorno sobre inversión", value: `${ratio(current.revenue, current.spend).toFixed(2)}x`, badge: "INGRESOS / COSTES", note: "ingresos atribuidos ÷ inversión promocional", metric: (day) => ratio(day.revenue, day.spend) }
+            ];
+            document.getElementById("primaryKpis").innerHTML = cards.map((card) => widgetCard(card.title, `<p class="text-3xl font-semibold tracking-tight">${escapeHTML(card.value)}</p><p class="mt-2 text-xs text-[#73776f]">${card.note}</p>${kpiSparkline(rows, card.metric, card.title)}`, {
+                badgeLabel: card.badge,
+                badgeClass: "rounded-sm bg-[#eff7e3] px-2 py-1 text-xs font-bold uppercase tracking-wide text-[#587a2b]"
+            })).join("");
+        }
+
+        function renderDimensions(rows) {
+            const data = aggregate(rows);
+            const dimensions = [
+                { title: "Volumen", metrics: [["Ventas", numberFormat.format(data.conversions)], ["Impresiones", numberFormat.format(data.impressions)], ["Usuarios activos", "Sin datos"]] },
+                { title: "Ingresos", metrics: [["Comisiones", money(data.commission)], ["Ventas atribuidas", money(data.revenue)], ["Precio medio", money(ratio(data.revenue, data.conversions))], ["MRR", "Sin datos"]] },
+                { title: "Engagement", metrics: [["Interacciones", numberFormat.format(data.engagements)], ["Tasa por alcance", percentage(ratio(data.engagements, data.reach) * 100)]] },
+                { title: "Retención", metrics: [["Churn", "Sin datos"], ["Permanencia", "Sin datos"], ["Compleción", "Sin datos"]] },
+                { title: "Rendimiento", metrics: [["Conversiones", numberFormat.format(data.conversions)], ["CTR", percentage(ratio(data.clicks, data.impressions) * 100)], ["Ventas / alcance", percentage(ratio(data.conversions, data.reach) * 100)]] },
+                { title: "Satisfacción", metrics: [["NPS", "Sin datos"], ["CSAT", "Sin datos"]] },
+                { title: "Eficiencia", metrics: [["Coste / venta", money(ratio(data.spend, data.conversions))], ["Margen de comisión", money(data.commission - data.spend)], ["Tiempo a venta", "Sin datos"]] }
+            ];
+            document.getElementById("dimensionRows").innerHTML = dimensions.map((dimension) => {
+                const content = `<dl class="space-y-2.5">${dimension.metrics.map(([label, value]) => `<div class="flex items-baseline justify-between gap-2"><dt class="text-xs text-[#858a80]">${escapeHTML(label)}</dt><dd class="text-right text-sm font-semibold ${value === "Sin datos" ? "text-[#a2a69e]" : "text-[#20231f]"}">${escapeHTML(value)}</dd></div>`).join("")}</dl>`;
+                return widgetCard(dimension.title, content, { cardClass: "rounded-md border border-black/10 bg-white p-4", headingClass: "text-xs font-bold uppercase tracking-wide text-[#62685e]", bodyClass: "mt-3" });
+            }).join("");
+        }
+
+        function renderFunnel(rows) {
+            const data = aggregate(rows);
+            const steps = [
+                { name: "Impresiones", value: data.impressions, rate: "Base" },
+                { name: "Clics", value: data.clicks, rate: `${percentage(ratio(data.clicks, data.impressions) * 100)} CTR` },
+                { name: "Ventas", value: data.conversions, rate: `${percentage(ratio(data.conversions, data.clicks) * 100)} de clics` }
+            ];
+            document.getElementById("funnelRows").innerHTML = steps.map((step) => {
+                const width = Math.max(2, ratio(step.value, data.impressions) * 100);
+                return `<div><div class="mb-1.5 flex items-center justify-between gap-3 text-sm"><span class="font-medium">${step.name}</span><span class="text-xs text-[#73776f]">${numberFormat.format(step.value)} <span class="ml-1 text-[#9a9e96]">${step.rate}</span></span></div><svg class="h-2 w-full" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="8" rx="4" fill="#eff0ec"/><rect width="${width}" height="8" rx="4" fill="#9bd34e"/></svg></div>`;
+            }).join("");
+        }
+
+        function renderQuality() {
+            const measures = [["Leads cualificados", "CRM"], ["Attendance rate", "Eventos"], ["Pass rate", "Evaluaciones"], ["Churn y permanencia", "Suscripciones"]];
+            document.getElementById("qualityRows").innerHTML = measures.map(([label, source]) => `<div class="border-b border-black/5 pb-3"><p class="text-xs font-medium text-[#62685e]">${label}</p><p class="mt-1 text-sm font-semibold text-[#a2a69e]">Sin datos</p><p class="mt-0.5 text-xs text-[#9a9e96]">Fuente: ${source}</p></div>`).join("");
+        }
+
+        function filteredActivity(days, platformName, startOffset = 0) {
+            const end = new Date(today);
+            end.setDate(today.getDate() - startOffset);
+            const start = new Date(end);
+            start.setDate(end.getDate() - days + 1);
+            return activityData.filter((row) => row.date >= dateKey(start) && row.date <= dateKey(end) &&
+                (platformName === "all" || row.platform === platformName));
+        }
+
+        function renderActivity(days, platformName) {
+            const rows = filteredActivity(days, platformName);
+            const groups = platforms.map((platform) => {
+                const matching = rows.filter((row) => row.platform === platform.name);
+                return { name: platform.name, posts: sum(matching, "posts"), stories: sum(matching, "stories"), reels: sum(matching, "reels"), videos: sum(matching, "videos") };
+            }).filter((group) => group.posts + group.stories + group.reels + group.videos > 0);
+            document.getElementById("activityRows").innerHTML = renderTable(
+                ["Canal", "Posts", "Stories", "Reels", "Vídeos"],
+                groups.map((group) => [group.name, numberFormat.format(group.posts), numberFormat.format(group.stories), numberFormat.format(group.reels), numberFormat.format(group.videos)]),
+                { minWidth: "min-w-max" }
+            );
+        }
+
+        function renderInteractions(rows) {
+            const groups = groupBy(rows, "platform");
+            document.getElementById("interactionRows").innerHTML = renderTable(
+                ["Canal", "Me gusta", "Comentarios", "Compartidos", "Guardados"],
+                groups.map((group) => [group.name, numberFormat.format(group.likes), numberFormat.format(group.comments), numberFormat.format(group.shares), numberFormat.format(group.saves)]),
+                { minWidth: "min-w-max" }
+            );
+        }
+
+        function renderAlerts(rows, previousRows) {
+            const current = aggregate(rows);
+            const previous = aggregate(previousRows);
+            const currentRate = ratio(current.conversions, current.reach);
+            const previousRate = ratio(previous.conversions, previous.reach);
+            let alert;
+            if (!previousRate) {
+                alert = ["Comparación no disponible", "Aún no hay un periodo anterior con datos.", "bg-[#f1f2ee] text-[#656b61]"];
+            } else {
+                const change = ((currentRate - previousRate) / previousRate) * 100;
+                if (change <= -15) alert = ["Caída en conversión", `${percentFormat.format(Math.abs(change))}% menos que el periodo anterior. Revisa el origen del tráfico y la página de destino.`, "bg-[#fff1e8] text-[#a44e24]"];
+                else if (change >= 15) alert = ["Pico de conversión", `${percentFormat.format(change)}% más que el periodo anterior. Identifica qué contenido o enlace impulsó el cambio.`, "bg-[#eff7e3] text-[#587a2b]"];
+                else alert = ["Conversión estable", `Variación de ${change >= 0 ? "+" : ""}${percentFormat.format(change)}% frente al periodo anterior.`, "bg-[#edf3ef] text-[#486c5c]"];
+            }
+            const platformsByReach = groupBy(rows, "platform").sort((a, b) => b.reach - a.reach);
+            const anomaly = platformsByReach.length > 1 ? platformsByReach.at(-1) : null;
+            const anomalyRate = anomaly ? ratio(anomaly.engagements, anomaly.reach) : 0;
+            const averageRate = ratio(current.engagements, current.reach);
+            const anomalyText = anomaly && anomalyRate < averageRate * 0.7
+                ? [`Engagement por debajo de la media`, `${anomaly.name}: ${percentage(anomalyRate * 100)} frente a ${percentage(averageRate * 100)} global.`, "bg-[#fff1e8] text-[#a44e24]"]
+                : ["Sin anomalías destacadas", "No se observa una desviación fuerte de engagement en la muestra.", "bg-[#f1f2ee] text-[#656b61]"];
+            document.getElementById("alertsRows").innerHTML = [alert, anomalyText].map(([title, detail, tone]) => `<div class="flex gap-3 rounded-md border border-black/5 p-3"><span class="mt-0.5 size-2 shrink-0 rounded-full ${tone.split(" ")[0]}"></span><div><p class="text-sm font-semibold">${title}</p><p class="mt-1 text-xs leading-5 text-[#73776f]">${detail}</p></div></div>`).join("");
+        }
+
+        function renderOpportunities(rows) {
+            const productGroups = groupBy(rows, "product").sort((a, b) => b.commission - a.commission);
+            const platformGroups = groupBy(rows, "platform").sort((a, b) => ratio(b.revenue, b.spend) - ratio(a.revenue, a.spend));
+            const campaignGroups = [];
+            platforms.forEach((platform) => products.forEach((product) => {
+                const matching = rows.filter((row) => row.platform === platform.name && row.product === product.name);
+                if (matching.length) campaignGroups.push({ name: `${platform.name} · ${product.name}`, ...aggregate(matching) });
+            }));
+            campaignGroups.sort((a, b) => b.revenue - a.revenue);
+            const platformByCtr = [...platformGroups].sort((a, b) => ratio(a.clicks, a.impressions) - ratio(b.clicks, b.impressions));
+            const topProduct = productGroups[0];
+            const topPlatform = platformGroups[0];
+            const topCampaign = campaignGroups[0];
+            const opportunity = platformByCtr[0];
+            const cards = [
+                ["Producto con más comisión", topProduct?.name || "Sin datos", money(topProduct?.commission || 0)],
+                ["Mejor ROAS de plataforma", topPlatform?.name || "Sin datos", `${ratio(topPlatform?.revenue || 0, topPlatform?.spend || 0).toFixed(2)}x`],
+                ["Campaña con más ingresos", topCampaign?.name || "Sin datos", money(topCampaign?.revenue || 0)],
+                ["Oportunidad · revisar CTR", opportunity?.name || "Sin datos", opportunity ? percentage(ratio(opportunity.clicks, opportunity.impressions) * 100) : "Sin datos"]
+            ];
+            document.getElementById("opportunityRows").innerHTML = cards.map(([label, name, value]) => `<div class="rounded-sm bg-[#f7f8f4] p-3"><p class="text-xs font-bold uppercase tracking-wide text-[#858a80]">${label}</p><p class="mt-1 text-sm font-semibold">${name}</p><p class="mt-0.5 text-xs text-[#73776f]">${value}</p></div>`).join("");
+        }
+
+        function renderOperationalTables(rows) {
+            const productGroups = groupBy(rows, "product").sort((a, b) => b.commission - a.commission);
+            const productRows = productGroups.map((group) => {
+                const product = products.find((item) => item.name === group.name);
+                return [group.name, money(product.price), numberFormat.format(group.conversions), money(group.commission), `${ratio(group.revenue, group.spend).toFixed(2)}x`];
+            });
+            document.getElementById("productTableRows").innerHTML = renderTable(
+                ["Producto", "Precio", "Ventas", "Comisiones", { label: "ROAS", align: "right" }],
+                productRows,
+                { minWidth: "min-w-max" }
+            );
+            const platformGroups = groupBy(rows, "platform");
+            const bestReach = Math.max(...platformGroups.map((group) => group.reach), 0);
+            const bestEngagement = Math.max(...platformGroups.map((group) => ratio(group.engagements, group.reach)), 0);
+            const bestCtr = Math.max(...platformGroups.map((group) => ratio(group.clicks, group.impressions)), 0);
+            const platformRows = platformGroups.map((group) => {
+                const badges = [group.reach === bestReach ? "Más alcance" : "", ratio(group.engagements, group.reach) === bestEngagement ? "Mayor ER" : "", ratio(group.clicks, group.impressions) === bestCtr ? "Mayor CTR" : ""].filter(Boolean).join(" · ");
+                return [badges ? `${group.name} · ${badges}` : group.name, numberFormat.format(group.reach), percentage(ratio(group.engagements, group.reach) * 100), numberFormat.format(group.conversions), percentage(ratio(group.clicks, group.impressions) * 100), `${ratio(group.revenue, group.spend).toFixed(2)}x`];
+            });
+            document.getElementById("platformTableRows").innerHTML = renderTable(
+                ["Plataforma", "Alcance", "Engagement", "Conversiones", "CTR", { label: "ROAS", align: "right" }],
+                platformRows,
+                { minWidth: "min-w-max" }
+            );
+        }
+
+        function renderChart(rows, days) {
+            const daily = new Map();
+            for (let offset = days - 1; offset >= 0; offset -= 1) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - offset);
+                daily.set(dateKey(date), { date, commission: 0, spend: 0 });
+            }
+            rows.forEach((row) => {
+                const point = daily.get(row.date);
+                if (point) { point.commission += row.commission; point.spend += row.spend; }
+            });
+            const points = [...daily.values()];
+            const maxValue = Math.max(...points.map((point) => Math.max(point.commission, point.spend)), 1);
+            const x = (index) => 42 + index * (650 / Math.max(points.length - 1, 1));
+            const y = (value) => 196 - (value / maxValue) * 166;
+            const commissionPoints = points.map((point, index) => `${x(index)},${y(point.commission)}`).join(" ");
+            const spendPoints = points.map((point, index) => `${x(index)},${y(point.spend)}`).join(" ");
+            const areaPoints = `42,196 ${commissionPoints} ${x(points.length - 1)},196`;
+            const grid = [30, 85, 140, 196].map((position) => `<line x1="42" y1="${position}" x2="692" y2="${position}" stroke="#e9ebe5" stroke-width="1"/>`).join("");
+            const labels = [0, Math.floor((points.length - 1) / 2), points.length - 1].map((index) => `<span>${points[index].date.toLocaleDateString("es-ES", { day: "numeric", month: "short" })}</span>`).join("");
+            document.getElementById("trendChart").innerHTML = `${grid}<polygon points="${areaPoints}" fill="#c7f36e" opacity="0.24"/><polyline points="${commissionPoints}" fill="none" stroke="#83b83a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${spendPoints}" fill="none" stroke="#e7a27e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+            document.getElementById("chartLabels").innerHTML = labels;
+        }
+
+        function renderPlatforms(rows) {
+            const groups = groupBy(rows, "platform").sort((a, b) => b.revenue - a.revenue);
+            document.getElementById("platformRows").innerHTML = groups.map((group) => {
+                const platform = platforms.find((item) => item.name === group.name);
+                return `<div class="flex items-center justify-between gap-2 py-3.5"><div class="flex min-w-0 items-center gap-3"><span class="flex size-9 shrink-0 items-center justify-center rounded-md border border-black/5 bg-[#f5f6f2] text-xs font-black">${platform.mark}</span><span class="min-w-0"><span class="block text-sm font-semibold">${group.name}</span><span class="block text-xs text-[#777d73]">${money(group.revenue)} ingresos</span></span></div><span class="shrink-0 rounded-sm bg-[#eff7e3] px-2.5 py-1.5 text-xs font-bold text-[#587a2b]">${ratio(group.revenue, group.spend).toFixed(2)}x</span></div>`;
+            }).join("") || `<p class="py-6 text-sm text-[#73776f]">Sin datos en esta selección.</p>`;
+        }
+
+        function renderProducts(rows) {
+            const groups = groupBy(rows, "product").sort((a, b) => b.revenue - a.revenue);
+            const maxRevenue = Math.max(...groups.map((group) => group.revenue), 1);
+            document.getElementById("productRows").innerHTML = groups.map((group, index) => {
+                const width = Math.max(4, Math.round((group.revenue / maxRevenue) * 100));
+                const fill = ["#9bd34e", "#f0a77e", "#6caeaa"][index % 3];
+                const product = products.find((item) => item.name === group.name);
+                return `<div><div class="mb-2 flex items-center justify-between gap-3"><span class="truncate text-sm font-semibold">${group.name} <span class="font-normal text-[#858a80]">· ${money(product.price)}</span></span><span class="shrink-0 text-sm font-semibold">${money(group.revenue)}</span></div><svg class="h-2 w-full" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="8" rx="4" fill="#eff0ec"/><rect width="${width}" height="8" rx="4" fill="${fill}"/></svg><div class="mt-1.5 text-xs text-[#858a80]">${numberFormat.format(group.conversions)} ventas · ${money(group.commission)} en comisiones</div></div>`;
+            }).join("") || `<p class="text-sm text-[#73776f]">Sin datos en esta selección.</p>`;
+        }
+
+        function renderEngagement(rows) {
+            const platformGroups = groupBy(rows, "platform").sort((a, b) => ratio(b.engagements, b.reach) - ratio(a.engagements, a.reach));
+            const productGroups = groupBy(rows, "product").sort((a, b) => ratio(b.engagements, b.reach) - ratio(a.engagements, a.reach));
+            const markup = (groups) => groups.map((group) => `<div class="flex items-center justify-between gap-2 border-b border-black/5 pb-2.5 text-sm last:border-0 last:pb-0"><span class="truncate text-[#62685e]">${group.name}</span><span class="shrink-0 font-semibold">${percentage(ratio(group.engagements, group.reach) * 100)}</span></div>`).join("") || `<p class="text-xs text-[#73776f]">Sin datos.</p>`;
+            document.getElementById("platformEngagement").innerHTML = markup(platformGroups);
+            document.getElementById("productEngagement").innerHTML = markup(productGroups);
+        }
+
+        function renderCampaigns(rows) {
+            const groups = [];
+            const dates = [...new Set(rows.map((row) => row.date))].sort();
+            const formatDate = (key) => new Date(`${key}T12:00:00`).toLocaleDateString("es-ES", { day: "2-digit", month: "short" });
+            const periodLabel = dates.length ? `${formatDate(dates[0])} – ${formatDate(dates[dates.length - 1])}` : "—";
+            platforms.forEach((platform) => products.forEach((product) => {
+                const matching = rows.filter((row) => row.platform === platform.name && row.product === product.name);
+                if (matching.length) groups.push({ platform: platform.name, product: product.name, ...aggregate(matching) });
+            }));
+            groups.sort((a, b) => b.revenue - a.revenue);
+            document.getElementById("rowCount").textContent = `${groups.length} ${groups.length === 1 ? "campaña" : "campañas"}`;
+            document.getElementById("emptyState").classList.toggle("hidden", groups.length > 0);
+            document.getElementById("campaignRows").innerHTML = renderTable(
+                ["Campaña", "Fechas", "Alcance", "Conversiones", "Conv. / alcance", "Ingresos", "Costes", { label: "ROAS", align: "right" }],
+                groups.map((group) => [ `${group.platform} · ${group.product}`, periodLabel, numberFormat.format(group.reach), numberFormat.format(group.conversions), percentage(ratio(group.conversions, group.reach) * 100), money(group.revenue), money(group.spend), `${ratio(group.revenue, group.spend).toFixed(2)}x` ]),
+                { minWidth: "min-w-max", textSize: "text-sm" }
+            );
+        }
+
+        function render() {
+            renderSectionHeadings();
+            const days = Number(document.getElementById("periodFilter").value);
+            const platform = document.getElementById("platformFilter").value;
+            const product = document.getElementById("productFilter").value;
+            const rows = filteredRows(days, platform, product);
+            const previousRows = filteredRows(days, platform, product, days);
+            renderKpis(rows, previousRows);
+            renderDimensions(rows);
+            renderFunnel(rows);
+            renderQuality();
+            renderChart(rows, days);
+            renderPlatforms(rows);
+            renderProducts(rows);
+            renderEngagement(rows);
+            renderActivity(days, platform);
+            renderInteractions(rows);
+            renderAlerts(rows, previousRows);
+            renderOpportunities(rows);
+            renderOperationalTables(rows);
+            renderCampaigns(rows);
+        }
+
+        function exportCsv() {
+            const days = Number(document.getElementById("periodFilter").value);
+            const rows = filteredRows(days, document.getElementById("platformFilter").value, document.getElementById("productFilter").value);
+            const groups = [];
+            platforms.forEach((platform) => products.forEach((product) => {
+                const matching = rows.filter((row) => row.platform === platform.name && row.product === product.name);
+                if (matching.length) groups.push({ platform: platform.name, product: product.name, ...aggregate(matching) });
+            }));
+            const data = [["Plataforma", "Producto", "Precio EUR", "Comision por venta", "Alcance", "Impresiones", "Clics", "CTR", "Conversiones", "Engagements", "Engagement rate", "Ingresos EUR", "Comisiones EUR", "Costes EUR", "ROAS"], ...groups.map((group) => {
+                const product = products.find((item) => item.name === group.product);
+                return [group.platform, group.product, product.price, (product.price * commissionRate).toFixed(2), group.reach, group.impressions, group.clicks, percentage(ratio(group.clicks, group.impressions) * 100), group.conversions, group.engagements, percentage(ratio(group.engagements, group.reach) * 100), group.revenue.toFixed(2), group.commission.toFixed(2), group.spend.toFixed(2), ratio(group.revenue, group.spend).toFixed(2)];
+            })];
+            const csv = data.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
+            const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" }));
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `creator-desk-reporte-${days}-dias.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        ["periodFilter", "platformFilter", "productFilter"].forEach((id) => document.getElementById(id).addEventListener("change", render));
+        document.getElementById("exportButton").addEventListener("click", exportCsv);
+        render();
+    </script>
+</body>
+</html>
